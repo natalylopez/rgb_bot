@@ -45,7 +45,7 @@ def Conexion(Servidor): # Se realiza la conexion
 
 	return irc
 
-def Identificar(s): # Se identifica el bot con un nick y el usuario
+def Identificar(irc): # Se identifica el bot con un nick y el usuario
 	print "[!] Enviando datos de autentificacion";
 	irc.send("NICK "+nick+"\n")
 	irc.send("USER "+nick+" Apellido Apellido Nombre\n")
