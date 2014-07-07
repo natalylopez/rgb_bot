@@ -60,6 +60,7 @@ def EncenderLed(Canal,irc):
 
 def ApagarLed(Canal,irc):
          bridge.put('D13','0') #esto apaga led
+         irc.send("PRIVMSG "+Canal+" :led apagado\n")
 		 
 def MDatos(data,irc): # Manipulacion de datos
 	if re.match(r'^PING :',data): # Se envia pong
