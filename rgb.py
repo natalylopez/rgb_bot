@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-  RGB Bot
+  [RGB] Bot!
 
   Copyright (C) 2013 Crozz Cyborg <CrozzCyborg@hotmail.es> 
                 2014 Nataly Lopez <natalylopez380@hotmail.com>
