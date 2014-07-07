@@ -39,39 +39,39 @@ canal = "#dot!"
 
 def Conexion(Servidor): # Se realiza la conexion
 	print "[!] Estableciendo conexion a "+Servidor[0]
-	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	s.connect(Servidor)
+	irc = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	irc.connect(Servidor)
 	print "[+] Conexion establecida"
 
-	return s
+	return irc
 
 def Identificar(s): # Se identifica el bot con un nick y el usuario
 	print "[!] Enviando datos de autentificacion";
-	s.send("NICK "+nick+"\n")
-	s.send("USER "+nick+" Apellido Apellido Nombre\n")
+	irc.send("NICK "+nick+"\n")
+	irc.send("USER "+nick+" Apellido Apellido Nombre\n")
 	return 0
 
-def JoinPart(Canal,accion,s): # Funcion para salir o entrar de un canal Sintaxis: JoinPart(canal, accion) , accion; 1 = entrar,  0 = salir
+def JoinPart(Canal,accion,irc): # Funcion para salir o entrar de un canal Sintaxis: JoinPart(canal, accion) , accion; 1 = entrar,  0 = salir
 	if(accion):
 		print "[!] Entrando en "+Canal;
-		s.send("JOIN "+Canal+"\n")
+		irc.send("JOIN "+Canal+"\n")
 
-def MDatos(data,s): # Manipulacion de datos
+def MDatos(data,irc): # Manipulacion de datos
 	if re.match(r'^PING :',data): # Se envia pong
-		s.send("PONG :"+data[6:]+"\n")
+		irc.send("PONG :"+data[6:]+"\n")
 	elif re.match(r'^:\S+ NOTICE AUTH :\*\*\* Looking up your hostname',data): # se solicita identificarse
-		Identificar(s)
+		Identificar(irc)
 	elif re.match(r'^:\S+ 001',data): # Si se recibe el mensaje de bienvenida entra al canal
-		JoinPart(canal,1,s)
+		JoinPart(canal,1,irc)
 
 
 def main():
 	print "[!] RGBOT :) [!]\n"
-	s = Conexion((servidor,port))
+	irc = Conexion((servidor,port))
 
-	while s: # Bucle que lee el socket
-		data = s.recv(512)
-		MDatos(data,s)
+	while irc: # Bucle que lee el socket
+		data = irc.recv(512)
+		MDatos(data,irc)
 
 	return 0
 
