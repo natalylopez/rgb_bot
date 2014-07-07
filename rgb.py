@@ -5,7 +5,7 @@
   [RGB] Bot!
 
   Copyright (C) 2013 Crozz Cyborg <CrozzCyborg@hotmail.es> 
-  Copyright (C) 2014 Nataly Lopez <natalylopez380@hotmail.com>
+                2014 Nataly Lopez <natalylopez380@hotmail.com>
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,14 +22,11 @@
   along with this program.  If not, see http://www.gnu.org/licenses/.
 """
 
-import socket,re
+import socket,re,sys
 
-#import sys
-#sys.path.insert(0, '/usr/lib/python2.7/bridge/')
-#from bridgeclient import BridgeClient as bridgeclient
-#bridge = bridgeclient()
-# bridge.put('D13','1') esto enciende led
-# bridge.put('D13','0') esto apaga led
+sys.path.insert(0, '/usr/lib/python2.7/bridge/')
+from bridgeclient import BridgeClient as bridgeclient
+bridge = bridgeclient()
 
 servidor = "irc.ircnode.com" # Datos a donde conectarse
 port = 6667
@@ -55,7 +52,15 @@ def JoinPart(Canal,accion,irc): # Funcion para salir o entrar de un canal Sintax
 	if(accion):
 		print "[!] Entrando en "+Canal;
 		irc.send("JOIN "+Canal+"\n")
+		#irc.send("PRIVMSG "+Canal+" :Welcome :D\n")
 
+def EncenderLed(Canal,irc):
+	 bridge.put('D13','1') #esto enciende led 
+	 irc.send("PRIVMSG "+Canal+" :led encendido\n")
+
+def ApagarLed(Canal,irc):
+         bridge.put('D13','0') #esto apaga led
+		 
 def MDatos(data,irc): # Manipulacion de datos
 	if re.match(r'^PING :',data): # Se envia pong
 		irc.send("PONG :"+data[6:]+"\n")
@@ -63,6 +68,14 @@ def MDatos(data,irc): # Manipulacion de datos
 		Identificar(irc)
 	elif re.match(r'^:\S+ 001',data): # Si se recibe el mensaje de bienvenida entra al canal
 		JoinPart(canal,1,irc)
+	else:
+		tmp = data.split(':')
+		#print len(tmp)
+		if len(tmp) > 2:
+			if re.match(r'on\!', tmp[2]): # Si se recibe el on!
+				EncenderLed(canal, irc)
+			elif re.match(r'off\!',tmp[2]): # Si se recibe el off!
+							ApagarLed(canal, irc)
 
 
 def main():
