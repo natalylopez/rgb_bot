@@ -1,5 +1,5 @@
 ####################################################################################
-# rgb_bot_update es solo para revisiones experimentales BETA                       #
+# [!] rgb_bot_update es solo para revisiones experimentales BETA                   #
 # Un bot [rgb] :)                                                                  #
 #                                                                                  #
 # Tal cual, es un bot que puede cambiar los colores de un led RGB a traves de IRC. #
