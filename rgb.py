@@ -122,10 +122,13 @@ def VOICE(Canal,irc):
 def MDatos(data,irc): # Manipulacion de datos
 	if re.match(r'^PING :',data): # Se envia pong
 		irc.send("PONG :"+data[6:]+"\n")
-	elif re.match(r'^:\S+ NOTICE \S+ ?:\*\*\* Looking up your hostname',data): # se solicita identificarse
-		Identificar(irc)
 	elif re.match(r'^:\S+ 001',data): # Si se recibe el mensaje de bienvenida entra al canal
 		JoinPart(canal,1,irc)
+	elif re.match(r'^:\S+ NOTICE \S+ ?:\*\*\* You\'re banned!',data):
+		print "[-] Bot banned"
+	elif re.match(r'^ERROR :Closing link',data):
+		print "[!] Se cerro la conexion"
+		exit()
 	else:
 		tmp = data.split(':')
 		#print len(tmp)
@@ -158,9 +161,11 @@ def main():
 
 	irc = Conexion((servidor,port))
 
+	Identificar(irc)
 	while irc: # Bucle que lee el socket
 		data = irc.recv(512)
-		MDatos(data,irc)
+		for i in data.split("\n"):
+			MDatos(i,irc)
 
 	return 0
 
@@ -169,4 +174,3 @@ try:
 except KeyboardInterrupt: # Funcion que se ejecuta en caso de Ctrl + C
 	print "[!] Deteniendo el bot"
 	exit()
-
