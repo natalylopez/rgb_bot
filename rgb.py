@@ -24,6 +24,7 @@
 """
 
 import socket,re,sys
+from sys import argv
 
 sys.path.insert(0, '/usr/lib/python2.7/bridge/')
 from bridgeclient import BridgeClient as bridgeclient
@@ -32,8 +33,28 @@ bridge = bridgeclient()
 servidor = "irc.ircnode.com" # Datos a donde conectarse
 port = 6667
 
-nick = "RGB" # Datos de nick y canal
-canal = "#dot!"
+nick = "NatBot" # Datos de nick y canal
+canal = "#rgbtest"
+
+
+def getOpts():
+	i=1
+	global servidor, port, nick, canal
+	while(i < len(argv)):
+		if argv[i] == '--nick' or argv[i] == '-n':
+			i+=1
+			nick = argv[i]
+		elif (argv[i] == '--server') or (argv[i] == '-s'):
+			i+=1
+			servidor = argv[i]
+		elif argv[i] == '--port' or argv[i] == '-p':
+			i+=1
+			port = int(argv[i])
+		elif argv[i] == '--channel' or argv[i] == '-c':
+			i+=1
+			canal = "#"+argv[i]
+		i+=1
+
 
 def Conexion(Servidor): # Se realiza la conexion
 	print "[!] Estableciendo conexion a "+Servidor[0]
@@ -86,11 +107,22 @@ def EncenderAzul(Canal,irc):
 def ApagarAzul(Canal,irc):
          bridge.put('D04','0') #esto apaga led azul
          irc.send("PRIVMSG "+Canal+" :led azul apagado\n")
+
+def OP(Canal,irc):
+	 irc.send("MODE "+Canal+" +o: Nataly\n")
+	 irc.send("MODE "+Canal+" +o: IlumiNaty\n")
+	 irc.send("MODE "+Canal+" +o: Xia\n")
+	 irc.send("MODE "+Canal+" +o: Segador\n")
+	 irc.send("MODE "+Canal+" +o: Andrea\n")
+
+def VOICE(Canal,irc):
+	 irc.send("MODE "+Canal+" +v: Nataly\n")
+	 irc.send("MODE "+Canal+" +v: IlumiNaty\n")
                                     		 
 def MDatos(data,irc): # Manipulacion de datos
 	if re.match(r'^PING :',data): # Se envia pong
 		irc.send("PONG :"+data[6:]+"\n")
-	elif re.match(r'^:\S+ NOTICE AUTH :\*\*\* Looking up your hostname',data): # se solicita identificarse
+	elif re.match(r'^:\S+ NOTICE \S+ ?:\*\*\* Looking up your hostname',data): # se solicita identificarse
 		Identificar(irc)
 	elif re.match(r'^:\S+ 001',data): # Si se recibe el mensaje de bienvenida entra al canal
 		JoinPart(canal,1,irc)
@@ -114,9 +146,16 @@ def MDatos(data,irc): # Manipulacion de datos
                                 EncenderAzul(canal, irc)
                         elif re.match(r'azul off\!',tmp[2]): # Si se recibe azul off!
                                 ApagarAzul(canal, irc)                                                 
+			elif re.match(r'op\!',tmp[2]): # Si se recibe up!
+				OP(canal, irc)
+			elif re.match(r'voice\!',tmp[2]): # Si se recibe voice!
+				VOICE(canal, irc)
 
 def main():
 	print "[!] RGBOT :) [!]\n"
+
+	getOpts()
+
 	irc = Conexion((servidor,port))
 
 	while irc: # Bucle que lee el socket
@@ -130,3 +169,4 @@ try:
 except KeyboardInterrupt: # Funcion que se ejecuta en caso de Ctrl + C
 	print "[!] Deteniendo el bot"
 	exit()
+
