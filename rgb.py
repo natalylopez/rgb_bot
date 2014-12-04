@@ -110,10 +110,10 @@ def ApagarAzul(Canal,irc):
 
 def OP(Canal,irc):
 	 irc.send("MODE "+Canal+" +o: Nataly\n")
-	 irc.send("MODE "+Canal+" +o: IlumiNaty\n")
-	 irc.send("MODE "+Canal+" +o: Xia\n")
-	 irc.send("MODE "+Canal+" +o: Segador\n")
-	 irc.send("MODE "+Canal+" +o: Andrea\n")
+	 irc.send("MODE "+Canal+" +o: NiNiTa\n")
+	 irc.send("MODE "+Canal+" +o: Alemanita\n")
+	 irc.send("MODE "+Canal+" +o: Satanica\n")
+	 irc.send("MODE "+Canal+" +o: Luciferina\n")
 
 def VOICE(Canal,irc):
 	 irc.send("MODE "+Canal+" +v: Nataly\n")
